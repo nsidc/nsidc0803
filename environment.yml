@@ -1,0 +1,24 @@
+name: nsidc0803
+channels:
+  - conda-forge
+  - nsidc
+  - nodefaults
+dependencies:
+  - click~=8.0
+  - matplotlib~=3.0
+  - netCDF4
+  - hdf5
+  - numpy~=1.22
+  - python~=3.10.0
+  - pyhdf
+  - bump2version
+
+  # testing/linting
+  - flake8~=5.0
+  - invoke~=1.5
+  - pytest
+  - mypy
+  - isort
+  - black~=22.6.0
+  - pre-commit~=2.20.0
+  - pip
