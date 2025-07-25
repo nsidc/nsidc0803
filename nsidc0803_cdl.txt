@@ -1,0 +1,104 @@
+netcdf nsidc0803_template {
+
+dimensions:
+    time = 1 ;
+    x = $xdim ;
+    y = $ydim ;
+
+variables:
+    char crs ;
+        crs:grid_mapping_name = "polar_stereographic" ;
+        crs:long_name = "$crs_long_name" ; // NH: "NSIDC Sea Ice Polar Stereographic North", SH: "NSIDC Sea Ice Polar Stereographic South"
+        crs:longitude_of_origin = $longitude_of_origin ; // NH: -45.0, SH: 0.0
+        crs:longitude_of_prime_meridian = 0.0 ;
+        crs:latitude_of_standard_parallel = $latitude_of_standard_parallel ; // NH: 70.0, SH: -70.0
+        crs:inverse_flattening = 298.279411123064 ;
+        crs:false_easting = 0.0 ;
+        crs:false_northing = 0.0 ;
+        crs:semi_major_axis = 6378273.0 ;
+        crs:GeoTransform = "$GeoTransform" ; // NH: "-3850000 25000 0 5850000 0 -25000", SH: "-3950000 25000 0 4350000 0 -25000"
+        crs:crs_wkt = "$crs_wkt" ;
+        // WKT2: NH=EPSG:3411, SH=EPSG:3412 (Hughes 1980 ellipsoid, Polar Stereographic variant B)
+
+    double time(time) ;
+        time:standard_name = "time" ;
+        time:calendar = "standard" ;
+        time:coverage_content_type = "coordinate" ;
+        time:long_name = "ANSI date" ;
+        time:units = "days since 1970-01-01" ;
+        time:axis = "T" ;
+
+    double x(x) ;
+        x:standard_name = "projection_x_coordinate" ;
+        x:coverage_content_type = "coordinate" ;
+        x:long_name = "x" ;
+        x:units = "meters" ;
+        x:axis = "X" ;
+
+    double y(y) ;
+        y:standard_name = "projection_y_coordinate" ;
+        y:coverage_content_type = "coordinate" ;
+        y:long_name = "y" ;
+        y:units = "meters" ;
+        y:axis = "Y" ;
+
+    ubyte ICECON(time, y, x) ;
+        ICECON:long_name = "Sea Ice Concentration" ;
+        ICECON:standard_name = "sea_ice_area_fraction" ;
+        ICECON:units = "1" ;
+        ICECON:_FillValue = 255UB ;
+        ICECON:valid_range = 0UB, 250UB ;
+        ICECON:grid_mapping = "crs" ;
+        ICECON:coverage_content_type = "image" ;
+        ICECON:coordinates = "time y x" ;
+        ICECON:flag_values = 251UB, 252UB, 253UB, 254UB ;
+        ICECON:flag_meanings = "pole_hole_mask unused coast land" ;
+        ICECON:packing_convention = "netCDF" ;
+        ICECON:packing_convention_description = "unpacked = scale_factor*packed + add_offset" ;
+        ICECON:scale_factor = 0.004 ;
+        ICECON:add_offset = 0.0 ;
+
+// Global attributes
+    :title = "AMSR2 Daily Polar Gridded Sea Ice Concentrations" ;
+    :Conventions = "CF-1.12, ACDD-1.3" ;
+    :source = "AMSR2 Level 1R brightness temperatures from GCOM-W1 satellite" ;
+    :summary = "This data set provides a daily map of sea ice concentrations for both the Northern and Southern hemispheres." ;
+    :publisher_institution = "National Snow and Ice Data Center/Cooperative Institute for Research in Environmental Sciences/University of Colorado at Boulder/Boulder, CO" ;
+    :publisher_name = "NASA National Snow and Ice Data Center Distributed Active Archive Center" ;
+    :publisher_type = "institution" ;
+    :publisher_url = "https://nsidc.org/daac" ;
+    :publisher_email = "nsidc@nsidc.org" ;
+    :program = "NASA Earth Science Data and Information System (ESDIS)" ;
+    :standard_name_vocabulary = "CF Standard Name Table (Version 91, 14 May 2025)" ;
+    :keywords = "SEA ICE > SEA ICE CONCENTRATION" ;
+    :keywords_vocabulary = "NASA Global Change Master Directory (GCMD) Earth Science Keywords, Version 20" ;
+    :platform = "GCOM-W1 > Global Change Observation Mission 1st-Water" ;
+    :platform_vocabulary = "NASA Global Change Master Directory (GCMD) Earth Science Keywords, Version 20" ;
+    :instrument = "AMSR2 > Advanced Microwave Scanning Radiometer 2" ;
+    :instrument_vocabulary = "NASA Global Change Master Directory (GCMD) Earth Science Keywords, Version 20" ;
+    :license = "Access Constraint: These data are freely, openly, and fully accessible; Use Constraint: These data are freely, openly, and fully available to use without restrictions, provided that you cite the data according to the recommended citation included here." ;
+    :creator_name = "NASA National Snow and Ice Data Center Distributed Active Archive Center" ;
+    :contributor_name = "Stewart J.S., Meier W.N., Wilcox, H., Scott D.J., Marowitz, R., Calme, J" ;
+    :contributor_role = "scientific_programmer, project_scientist, software_developer, project_lead, software_developer, data_manager" ;
+    :citation = "Stewart, J.S., Meier, W.N., Wilcox, H., Scott, D.J. & Marowitz, R. (2025). AMSR2 Daily Polar Gridded Sea Ice Concentrations. (NSIDC-0803, Version 2). [Data Set]. Boulder, Colorado USA. National Snow and Ice Data Center. https://doi.org/10.5067/W13AO54SS7CW." ;
+    :id = "10.5067/W13AO54SS7CW" ;
+    :metadata_link = "https://doi.org/10.5067/W13AO54SS7CW" ;
+    :product_version = "v2.0" ;
+    :software_version_id = "$software_version_id" ;
+    :software_repository = "$software_repository" ;
+    :geospatial_bounds_crs = "$geospatial_bounds_crs" ; // NH: "EPSG:3411", SH: "EPSG:3412"
+    :geospatial_bounds = "$geospatial_bounds" ; // NH: "POLYGON ((-3850000 5850000, 3750000 5850000, 3750000 -5350000, -3850000 -5350000, -3850000 5850000))", SH: "POLYGON ((-3950000 4350000, 3950000 4350000, 3950000 -3950000, -3950000 -3950000, -3950000 4350000))"
+    :cdm_data_type = "Grid" ;
+    :processing_level = "Level 3" ;
+    :geospatial_lat_min = $geospatial_lat_min ; // NH: 30.980564, SH: -90.0
+    :geospatial_lat_max = $geospatial_lat_max ; // NH: 90, SH: -39.23089
+    :geospatial_lon_min = -180 ;
+    :geospatial_lon_max = 180 ;
+    :geospatial_lat_units = "degrees_north" ;
+    :geospatial_lon_units = "degrees_east" ;
+    :time_coverage_resolution = "P1D" ;
+    :time_coverage_start = "$time_coverage_start" ;
+    :time_coverage_end = "$time_coverage_end" ;
+    :time_coverage_duration = "P01T00:00.00" ;
+    :date_created = "$date_created" ;
+    :date_modified = "$date_modified" ;
