@@ -33,7 +33,7 @@ def get_grid_params():
             "longitude_of_projection_origin": -45.0,
             "latitude_of_projection_origin": 90.0,
             "latitude_of_standard_parallel": 70.0,
-            "GeoTransform": "-3850000 25000 0 5850000 0 -25000",
+            "GeoTransform": "-3850000 25000 0 5850000 0 -25000 ",
             "geospatial_bounds_crs": "EPSG:3411",
             "geospatial_bounds": "POLYGON ((-3850000 5850000, 3750000 5850000,"
             "3750000 -5350000, -3850000 -5350000, -3850000 5850000))",
@@ -56,7 +56,7 @@ def get_grid_params():
             "longitude_of_projection_origin": 0.0,
             "latitude_of_projection_origin": -90.0,
             "latitude_of_standard_parallel": -70.0,
-            "GeoTransform": "-3950000 25000 0 4350000 0 -25000",
+            "GeoTransform": "-3950000 25000 0 4350000 0 -25000 ",
             "geospatial_bounds_crs": "EPSG:3412",
             "geospatial_bounds": "POLYGON ((-3950000 4350000, 3950000 4350000,"
             "3950000 -3950000, -3950000 -3950000, -3950000 4350000))",
