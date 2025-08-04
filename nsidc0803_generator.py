@@ -212,7 +212,6 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
         data = np.fromfile(f, dtype=np.uint8)
 
     # Skip 300-byte header (from binary analysis)
-    # header = data[:300]
     grid_data = data[300:]
 
     # Validate grid size
@@ -225,12 +224,14 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
     # Reshape to grid
     grid_array = grid_data.reshape(params["ydim"], params["xdim"])
 
-    # Fill the pole hole
-    kernel = np.zeros((448, 304), dtype=np.uint8)
-    kernel[229, 150:158] = 1
-    kernel[230:238, 149:159] = 1
-    kernel[238, 150:158] = 1
-    grid_array[kernel] = 251
+    if hemisphere == "north":
+        # Fill the pole hole
+        kernel = np.zeros((448, 304), dtype=np.uint8)
+        kernel[229, 150:158] = 1
+        kernel[230:238, 149:159] = 1
+        kernel[238, 150:158] = 1
+        is_pole_hole = kernel == 1
+        grid_array[is_pole_hole] = 251
 
     # scale the binary data
     scaled_data = grid_array * 0.004
