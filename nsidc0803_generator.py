@@ -116,7 +116,7 @@ def create_cdl(template_file, output_path, date, hemisphere):
         # "longitude_of_origin": params["longitude_of_origin"],
         "longitude_of_projection_origin": params["longitude_of_projection_origin"],
         "straight_vertical_longitude_from_pole": params[
-            "straight_vertical_longitude_from_pole"
+            "longitude_of_projection_origin"
         ],
         "latitude_of_projection_origin": params["latitude_of_projection_origin"],
         "latitude_of_standard_parallel": params["latitude_of_standard_parallel"],
