@@ -30,7 +30,7 @@ def get_grid_params():
             "ydim": 448,
             "crs_long_name": "NSIDC Sea Ice Polar Stereographic North",
             "straight_vertical_longitude_from_pole": -45.0,
-            "longitude_of_projection_origin": -45.0,
+            "longitude_of_projection_origin": 0.0,
             "latitude_of_projection_origin": 90.0,
             "latitude_of_standard_parallel": 70.0,
             "GeoTransform": "-3850000 25000 0 5850000 0 -25000 ",
@@ -225,12 +225,13 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
     # Reshape to grid
     grid_array = grid_data.reshape(params["ydim"], params["xdim"])
 
-    # Add to NetCDF
-    with Dataset(nc_path, "a") as ds:
-        # ICECON variable
-        icecon = ds.variables["ICECON"]
+    # scale the binary data
+    scaled_data = grid_array * 0.004
 
-        icecon[0, :, :] = grid_array
+    with Dataset(nc_path, "a") as ds:
+        icecon = ds.variables["ICECON"]
+        icecon[0, :, :] = scaled_data[:, :]
+
         ds.variables["crs"].setncattr("crs_wkt", params["crs_wkt"])
 
 
