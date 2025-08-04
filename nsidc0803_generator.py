@@ -225,6 +225,13 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
     # Reshape to grid
     grid_array = grid_data.reshape(params["ydim"], params["xdim"])
 
+    # Fill the pole hole
+    kernel = np.zeros((448, 304), dtype=np.uint8)
+    kernel[229, 150:158] = 1
+    kernel[230:238, 149:159] = 1
+    kernel[238, 150:158] = 1
+    grid_array[kernel] = 251
+
     # scale the binary data
     scaled_data = grid_array * 0.004
 
