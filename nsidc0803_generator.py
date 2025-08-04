@@ -207,7 +207,7 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
         data = np.fromfile(f, dtype=np.uint8)
 
     # Skip 300-byte header (from binary analysis)
-    header = data[:300]
+    # header = data[:300]
     grid_data = data[300:]
 
     # Validate grid size
@@ -226,7 +226,6 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
         icecon = ds.variables["ICECON"]
 
         icecon[0, :, :] = grid_array
-        icecon.setncattr("binary_header", header.tobytes())
         ds.variables["crs"].setncattr("crs_wkt", params["crs_wkt"])
 
 
