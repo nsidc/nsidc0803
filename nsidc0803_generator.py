@@ -39,14 +39,19 @@ def get_grid_params():
             "3750000 -5350000, -3850000 -5350000, -3850000 5850000))",
             "geospatial_lat_min": 30.980564,
             "geospatial_lat_max": 90.0,
-            "crs_wkt": """PROJCS["NSIDC Sea Ice Polar Stereographic North",
-            GEOGCS["Hughes 1980",DATUM["Hughes_1980",SPHEROID["Hughes 1980",
-            6378273,298.279411123064,AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG",
-            "1359"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],
-            UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG",
-            "10345"]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",
-            70],PARAMETER["central_meridian",-45],PARAMETER["false_easting",0],PARAMETER["false_northing",0],
-            UNIT["metre",1,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","3411"]]""",
+            "crs_wkt": 'PROJCS["NSIDC Sea Ice Polar Stereographic North",'
+            'GEOGCS["Hughes 1980",DATUM["Hughes_1980",'
+            'SPHEROID["Hughes 1980",6378273,298.279411123064,'
+            'AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG",'
+            '"1359"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG",'
+            '"8901"]],UNIT["degree",0.0174532925199433,'
+            'AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG",'
+            '"10345"]],PROJECTION["Polar_Stereographic"],'
+            'PARAMETER["latitude_of_origin",70],'
+            'PARAMETER["central_meridian",-45],'
+            'PARAMETER["false_easting",0],'
+            'PARAMETER["false_northing",0],UNIT["metre",1,'
+            'AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","3411"]]',
         },
         "south": {
             "xdim": 316,
