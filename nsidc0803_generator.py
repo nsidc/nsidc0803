@@ -30,15 +30,24 @@ def get_grid_params():
             "ydim": 448,
             "crs_long_name": "NSIDC Sea Ice Polar Stereographic North",
             "straight_vertical_longitude_from_pole": -45.0,
-            "longitude_of_origin": -45.0,
-            "latitude_of_projection_origin": -90.0,
+            "longitude_of_projection_origin": -45.0,
+            "latitude_of_origin": 90.0,
             "latitude_of_standard_parallel": 70.0,
             "GeoTransform": "-3850000 25000 0 5850000 0 -25000",
             "geospatial_bounds_crs": "EPSG:3411",
-            "geospatial_bounds": "POLYGON ((-3850000 5850000, 3750000 5850000, 3750000 -5350000, -3850000 -5350000, -3850000 5850000))",
+            "geospatial_bounds": "POLYGON ((-3850000 5850000, 3750000 5850000,"
+            "3750000 -5350000, -3850000 -5350000, -3850000 5850000))",
             "geospatial_lat_min": 30.980564,
             "geospatial_lat_max": 90.0,
-            "crs_wkt": 'PROJCS[\\"NSIDC Sea Ice Polar Stereographic North\\",GEOGCS[\\"Unspecified datum based upon the Hughes 1980 ellipsoid\\",DATUM[\\"Not_specified_based_on_Hughes_1980_ellipsoid\\",SPHEROID[\\"Hughes 1980\\",6378273,298.279411123064,AUTHORITY[\\"EPSG\\",\\"7058\\"]],AUTHORITY[\\"EPSG\\",\\"6054\\"]],PRIMEM[\\"Greenwich\\",0,AUTHORITY[\\"EPSG\\",\\"8901\\"]],UNIT[\\"degree\\",0.0174532925199433,AUTHORITY[\\"EPSG\\",\\"9122\\"]],AUTHORITY[\\"EPSG\\",\\"4054\\"]],PROJECTION[\\"Polar_Stereographic\\"],PARAMETER[\\"latitude_of_origin\\",70],PARAMETER[\\"central_meridian\\",-45],PARAMETER[\\"scale_factor\\",1],PARAMETER[\\"false_easting\\",0],PARAMETER[\\"false_northing\\",0],UNIT[\\"metre\\",1,AUTHORITY[\\"EPSG\\",\\"9001\\"]],AUTHORITY[\\"EPSG\\",\\"3411\\"]]',
+            "crs_wkt": """PROJCS["NSIDC Sea Ice Polar Stereographic North",
+            GEOGCS["Hughes 1980",DATUM["Hughes_1980",SPHEROID["Hughes 1980",
+           e6378273,298.279411123064,AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG",
+           "1359"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",
+           0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","10345"]],
+           PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",70],
+           PARAMETER["central_meridian",-45],PARAMETER["false_easting",0],
+           PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],
+           AUTHORITY["EPSG","3411"]]""",
         },
         "south": {
             "xdim": 316,
@@ -50,10 +59,19 @@ def get_grid_params():
             "latitude_of_standard_parallel": -70.0,
             "GeoTransform": "-3950000 25000 0 4350000 0 -25000",
             "geospatial_bounds_crs": "EPSG:3412",
-            "geospatial_bounds": "POLYGON ((-3950000 4350000, 3950000 4350000, 3950000 -3950000, -3950000 -3950000, -3950000 4350000))",
+            "geospatial_bounds": "POLYGON ((-3950000 4350000, 3950000 4350000,"
+            "3950000 -3950000, -3950000 -3950000, -3950000 4350000))",
             "geospatial_lat_min": -90.0,
             "geospatial_lat_max": -39.23089,
-            "crs_wkt": 'PROJCS[\\"NSIDC Sea Ice Polar Stereographic South\\",GEOGCS[\\"Unspecified datum based upon the Hughes 1980 ellipsoid\\",DATUM[\\"Not_specified_based_on_Hughes_1980_ellipsoid\\",SPHEROID[\\"Hughes 1980\\",6378273,298.279411123064,AUTHORITY[\\"EPSG\\",\\"7058\\"]],AUTHORITY[\\"EPSG\\",\\"6054\\"]],PRIMEM[\\"Greenwich\\",0,AUTHORITY[\\"EPSG\\",\\"8901\\"]],UNIT[\\"degree\\",0.0174532925199433,AUTHORITY[\\"EPSG\\",\\"9122\\"]],AUTHORITY[\\"EPSG\\",\\"4054\\"]],PROJECTION[\\"Polar_Stereographic\\"],PARAMETER[\\"latitude_of_origin\\",-70],PARAMETER[\\"central_meridian\\",0],PARAMETER[\\"scale_factor\\",1],PARAMETER[\\"false_easting\\",0],PARAMETER[\\"false_northing\\",0],UNIT[\\"metre\\",1,AUTHORITY[\\"EPSG\\",\\"9001\\"]],AUTHORITY[\\"EPSG\\",\\"3412\\"]]',
+            "crs_wkt": """PROJCS["NSIDC Sea Ice Polar Stereographic South",
+            GEOGCS["Hughes 1980",DATUM["Hughes_1980",SPHEROID["Hughes 1980",6378273,
+            298.279411123064,AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG","1359"]],
+            PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",
+            0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","10345"]],
+            PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-70],
+            PARAMETER["central_meridian",0],PARAMETER["false_easting",0],
+            PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],
+            AUTHORITY["EPSG","3412"]]""",
         },
     }
 
@@ -96,7 +114,8 @@ def create_cdl(template_file, output_path, date, hemisphere):
         "xdim": params["xdim"],
         "ydim": params["ydim"],
         "crs_long_name": params["crs_long_name"],
-        "longitude_of_origin": params["longitude_of_origin"],
+        # "longitude_of_origin": params["longitude_of_origin"],
+        "longitude_of_projection_origin": params["longitude_of_projection_origin"],
         "straight_vertical_longitude_from_pole": params[
             "straight_vertical_longitude_from_pole"
         ],
@@ -243,19 +262,19 @@ class NetCDFGenerator:
 
         try:
             # Create CDL from template
-            print(f"    Creating CDL...")
+            print("    Creating CDL...")
             temp_cdl = create_cdl(self.template_file, output_file, date, hemisphere)
 
             # Generate NetCDF from CDL
-            print(f"    Generating NetCDF...")
+            print("    Generating NetCDF...")
             create_netcdf(temp_cdl, output_file)
 
             # Add coordinate data
-            print(f"    Adding coordinates...")
+            print("    Adding coordinates...")
             add_nc_coordinate_values(output_file, date, hemisphere)
 
             # Add binary data
-            print(f"    Adding ice concentration data...")
+            print("    Adding ice concentration data...")
             encode_binary_to_nc(output_file, binary_file, hemisphere)
 
             print(f"    ✅ Created: {output_file}")
@@ -358,11 +377,13 @@ def main(binary_dir, output_dir, template, start_date, end_date, hemisphere, ver
 
     \b
     # Process single date, both hemispheres
-    python nsidc0803_generator.py -b /data/binary -o /data/output -t template.cdl -s 20240105
+    python nsidc0803_generator.py -b /data/binary -o /data/output
+        -t template.cdl -s 20240105
 
     \b
     # Process date range, northern hemisphere only
-    python nsidc0803_generator.py -b /data/binary -o /data/output -t template.cdl -s 20240105 -e 20240110 -h north
+    python nsidc0803_generator.py -b /data/binary -o /data/output
+        -t template.cdl -s 20240105 -e 20240110 -h north
     """
 
     if end_date is None:
@@ -373,7 +394,8 @@ def main(binary_dir, output_dir, template, start_date, end_date, hemisphere, ver
         print(f"Output directory: {output_dir}")
         print(f"Template file: {template}")
         print(
-            f"Date range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}"
+            f"Date range: {start_date.strftime('%Y-%m-%d')}"
+            f" to {end_date.strftime('%Y-%m-%d')}"
         )
         print(f"Hemisphere: {hemisphere}")
         print()
@@ -395,7 +417,8 @@ def main(binary_dir, output_dir, template, start_date, end_date, hemisphere, ver
     # Summary
     print()
     print(
-        f"Processing complete: {total_success}/{total_attempted} files created successfully"
+        f"Processing complete: {total_success}/{total_attempted}"
+        " files created successfully"
     )
 
     if total_success < total_attempted:

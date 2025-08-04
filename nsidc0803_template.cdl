@@ -9,7 +9,7 @@ variables:
     char crs ;
         crs:grid_mapping_name = "polar_stereographic" ;
         crs:long_name = "$crs_long_name" ; // NH: "NSIDC Sea Ice Polar Stereographic North", SH: "NSIDC Sea Ice Polar Stereographic South"
-        crs:longitude_of_origin = $longitude_of_origin ; // NH: -45.0, SH: 0.0
+        crs:longitude_of_projection_origin = $longitude_of_projection_origin ; // NH: -45.0, SH: 0.0
 	crs:straight_vertical_longitude_from_pole = $longitude_of_origin ; // NH: -45.0, SH: 0.0
 	crs:longitude_of_prime_meridian = 0.0 ;
         crs:latitude_of_standard_parallel = $latitude_of_standard_parallel ; // NH: 70.0, SH: -70.0
