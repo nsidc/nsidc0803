@@ -31,7 +31,7 @@ def get_grid_params():
             "crs_long_name": "NSIDC Sea Ice Polar Stereographic North",
             "straight_vertical_longitude_from_pole": -45.0,
             "longitude_of_projection_origin": -45.0,
-            "latitude_of_origin": 90.0,
+            "latitude_of_projection_origin": 90.0,
             "latitude_of_standard_parallel": 70.0,
             "GeoTransform": "-3850000 25000 0 5850000 0 -25000",
             "geospatial_bounds_crs": "EPSG:3411",
@@ -40,21 +40,21 @@ def get_grid_params():
             "geospatial_lat_min": 30.980564,
             "geospatial_lat_max": 90.0,
             "crs_wkt": """PROJCS["NSIDC Sea Ice Polar Stereographic North",
-            GEOGCS["Hughes 1980",DATUM["Hughes_1980",SPHEROID["Hughes 1980",
-           e6378273,298.279411123064,AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG",
-           "1359"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",
-           0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","10345"]],
-           PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",70],
-           PARAMETER["central_meridian",-45],PARAMETER["false_easting",0],
-           PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],
-           AUTHORITY["EPSG","3411"]]""",
+            GEOGCS["Hughes 1980",DATUM["Hughes_1980",
+            SPHEROID["Hughes 1980",6378273,298.279411123064,
+            AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG","1359"]],
+            PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],
+            UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","10345"]],
+            PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",70],
+            PARAMETER["central_meridian",-45],PARAMETER["false_easting",0],PARAMETER["false_northing",0],
+            UNIT["metre",1,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","3411"]]""",
         },
         "south": {
             "xdim": 316,
             "ydim": 332,
             "crs_long_name": "NSIDC Sea Ice Polar Stereographic South",
             "straight_vertical_longitude_from_pole": 0.0,
-            "longitude_of_origin": 0.0,
+            "longitude_of_projection_origin": 0.0,
             "latitude_of_projection_origin": -90.0,
             "latitude_of_standard_parallel": -70.0,
             "GeoTransform": "-3950000 25000 0 4350000 0 -25000",
@@ -64,14 +64,14 @@ def get_grid_params():
             "geospatial_lat_min": -90.0,
             "geospatial_lat_max": -39.23089,
             "crs_wkt": """PROJCS["NSIDC Sea Ice Polar Stereographic South",
-            GEOGCS["Hughes 1980",DATUM["Hughes_1980",SPHEROID["Hughes 1980",6378273,
-            298.279411123064,AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG","1359"]],
-            PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",
-            0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","10345"]],
-            PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-70],
-            PARAMETER["central_meridian",0],PARAMETER["false_easting",0],
-            PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],
-            AUTHORITY["EPSG","3412"]]""",
+            GEOGCS["Hughes 1980",DATUM["Hughes_1980",SPHEROID["Hughes 1980",
+            6378273,298.279411123064,AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG",
+            "1359"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],
+            UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG",
+            "10345"]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",
+            -70],PARAMETER["central_meridian",0],PARAMETER["false_easting",0],
+            PARAMETER["false_northing",0],UNIT["metre",1,
+            AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","3412"]]""",
         },
     }
 
@@ -122,7 +122,6 @@ def create_cdl(template_file, output_path, date, hemisphere):
         "latitude_of_projection_origin": params["latitude_of_projection_origin"],
         "latitude_of_standard_parallel": params["latitude_of_standard_parallel"],
         "GeoTransform": params["GeoTransform"],
-        "crs_wkt": params["crs_wkt"],
         "geospatial_bounds_crs": params["geospatial_bounds_crs"],
         "geospatial_bounds": params["geospatial_bounds"],
         "geospatial_lat_min": params["geospatial_lat_min"],
@@ -227,11 +226,9 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
         # ICECON variable
         icecon = ds.variables["ICECON"]
 
-        # Set data
         icecon[0, :, :] = grid_array
-
-        # Store header as attribute
         icecon.setncattr("binary_header", header.tobytes())
+        ds.variables["crs"].setncattr("crs_wkt", params["crs_wkt"])
 
 
 class NetCDFGenerator:
