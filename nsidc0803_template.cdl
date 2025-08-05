@@ -7,7 +7,7 @@ dimensions:
 
 variables:
     char crs ;
-	// CRS attributes will be set programmatically from pyproj
+    // CRS attributes will be set programmatically from pyproj
 
 
     double time(time) ;
