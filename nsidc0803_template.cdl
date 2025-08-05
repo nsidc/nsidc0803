@@ -1,26 +1,14 @@
 netcdf nsidc0803_template {
 
 dimensions:
-    time = 1 ;
+    time = UNLIMITED ; // (1 currently)
     x = $xdim ;
     y = $ydim ;
 
 variables:
     char crs ;
-        crs:grid_mapping_name = "polar_stereographic" ;
-        crs:long_name = "$crs_long_name" ; // NH: "NSIDC Sea Ice Polar Stereographic North", SH: "NSIDC Sea Ice Polar Stereographic South"
-	crs:longitude_of_projection_origin = $longitude_of_projection_origin ; // NH: -45.0, SH: 0.0
-	crs:straight_vertical_longitude_from_pole = $longitude_of_projection_origin ; // NH: -45.0, SH: 0.0
-	crs:longitude_of_prime_meridian = 0.0 ;
-        crs:latitude_of_standard_parallel = $latitude_of_standard_parallel ; // NH: 70.0, SH: -70.0
-	crs:latitude_of_projection_origin = $latitude_of_projection_origin ; // 90.0 for NH, -90.0 for SH
-        crs:inverse_flattening = 298.279411123064 ;
-        crs:false_easting = 0.0 ;
-        crs:false_northing = 0.0 ;
-        crs:semi_major_axis = 6378273.0 ;
-        crs:GeoTransform = "$GeoTransform" ; // NH: "-3850000 25000 0 5850000 0 -25000", SH: "-3950000 25000 0 4350000 0 -25000"
-        // crs:crs_wkt = '$crs_wkt' ;
-        // WKT2: NH=EPSG:3411, SH=EPSG:3412 (Hughes 1980 ellipsoid, Polar Stereographic variant B)
+	// CRS attributes will be set programmatically from pyproj
+
 
     double time(time) ;
         time:standard_name = "time" ;

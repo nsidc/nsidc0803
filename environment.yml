@@ -9,6 +9,7 @@ dependencies:
   - netCDF4
   - nco
   - hdf5
+  - pyproj
   - numpy~=1.22
   - python~=3.10.0
   - pyhdf
