@@ -9,15 +9,17 @@ variables:
     char crs ;
         crs:grid_mapping_name = "polar_stereographic" ;
         crs:long_name = "$crs_long_name" ; // NH: "NSIDC Sea Ice Polar Stereographic North", SH: "NSIDC Sea Ice Polar Stereographic South"
-        crs:longitude_of_origin = $longitude_of_origin ; // NH: -45.0, SH: 0.0
-        crs:longitude_of_prime_meridian = 0.0 ;
+	crs:longitude_of_projection_origin = $longitude_of_projection_origin ; // NH: -45.0, SH: 0.0
+	crs:straight_vertical_longitude_from_pole = $longitude_of_projection_origin ; // NH: -45.0, SH: 0.0
+	crs:longitude_of_prime_meridian = 0.0 ;
         crs:latitude_of_standard_parallel = $latitude_of_standard_parallel ; // NH: 70.0, SH: -70.0
+	crs:latitude_of_projection_origin = $latitude_of_projection_origin ; // 90.0 for NH, -90.0 for SH
         crs:inverse_flattening = 298.279411123064 ;
         crs:false_easting = 0.0 ;
         crs:false_northing = 0.0 ;
         crs:semi_major_axis = 6378273.0 ;
         crs:GeoTransform = "$GeoTransform" ; // NH: "-3850000 25000 0 5850000 0 -25000", SH: "-3950000 25000 0 4350000 0 -25000"
-        crs:crs_wkt = "$crs_wkt" ;
+        // crs:crs_wkt = '$crs_wkt' ;
         // WKT2: NH=EPSG:3411, SH=EPSG:3412 (Hughes 1980 ellipsoid, Polar Stereographic variant B)
 
     double time(time) ;
@@ -78,7 +80,7 @@ variables:
     :instrument_vocabulary = "NASA Global Change Master Directory (GCMD) Earth Science Keywords, Version 20" ;
     :license = "Access Constraint: These data are freely, openly, and fully accessible; Use Constraint: These data are freely, openly, and fully available to use without restrictions, provided that you cite the data according to the recommended citation included here." ;
     :creator_name = "NASA National Snow and Ice Data Center Distributed Active Archive Center" ;
-    :contributor_name = "Stewart J.S., Meier W.N., Wilcox, H., Scott D.J., Marowitz, R., Calme, J" ;
+    :contributor_name = "Stewart J.S., Meier W.N., Wilcox, H., Scott D.J., Marowitz, R., Calme, J." ;
     :contributor_role = "scientific_programmer, project_scientist, software_developer, project_lead, software_developer, data_manager" ;
     :citation = "Stewart, J.S., Meier, W.N., Wilcox, H., Scott, D.J. & Marowitz, R. (2025). AMSR2 Daily Polar Gridded Sea Ice Concentrations. (NSIDC-0803, Version 2). [Data Set]. Boulder, Colorado USA. National Snow and Ice Data Center. https://doi.org/10.5067/W13AO54SS7CW." ;
     :id = "10.5067/W13AO54SS7CW" ;
@@ -102,3 +104,4 @@ variables:
     :time_coverage_duration = "P01T00:00.00" ;
     :date_created = "$date_created" ;
     :date_modified = "$date_modified" ;
+}

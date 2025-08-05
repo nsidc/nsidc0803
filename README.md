@@ -5,7 +5,7 @@
 
 # NSIDC 0803
 
-{title} enables {audience} to {utility}.
+This repository enables users to generate daily NetCDF files from AMSR2 binary sea ice concentration data for the NSIDC-0803 dataset.
 
 
 ## Level of Support
@@ -19,18 +19,55 @@ nsidc@nsidc.org for more information.
 
 ## Requirements
 
-{requirements}
+* Python
+* conda
+
+All Python dependencies are managed via the included `environment.yml` file.
 
 
 ## Installation
 
-{installation}
+```bash
+# Create conda environment
+conda env create -f environment.yml
 
+# Activate environment
+conda activate nsidc0803
+```
 
 ## Usage
 
-{usage}
+The main script processes binary AMSR2 files and generates CF-compliant NetCDF files with proper metadata following the approved NSIDC-0803 specification.
 
+```bash
+# Process single date (both hemispheres)
+python nsidc0803_generator.py \
+  -b /path/to/binary/files \
+  -o /path/to/output \
+  -t nsidc0803_template.cdl \
+  -s 20250104
+```
+NOTE: this will be improved to use click
+
+```
+- `-b, --binary-dir`: Directory containing binary input files (required)
+- `-o, --output-dir`: Directory for NetCDF output files (required)  
+- `-t, --template`: CDL template file (required)
+- `-s, --start-date`: Start date YYYYMMDD (required)
+- `-e, --end-date`: End date YYYYMMDD (optional, defaults to start-date)
+- `-h, --hemisphere`: north/south/both (default: both)
+- `-v, --verbose`: Verbose output
+```
+
+**Input files expected:**
+- `nt_YYYYMMDD_as2_nrt_n.bin` (Northern Hemisphere)
+- `nt_YYYYMMDD_as2_nrt_s.bin` (Southern Hemisphere)
+
+**Output files generated:**
+- `NSIDC0803_SIC_N25km_YYYYMMDD_v2.0.nc` (Northern Hemisphere)
+- `NSIDC0803_SIC_S25km_YYYYMMDD_v2.0.nc` (Southern Hemisphere)
+
+Files are organized in date-based subdirectories: `YYYY.MM.DD/`
 
 ## Troubleshooting
 
