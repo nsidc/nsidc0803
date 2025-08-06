@@ -2,11 +2,9 @@
   <img alt="NSIDC logo" src="https://nsidc.org/themes/custom/nsidc/logo.svg" width="150" />
 </p>
 
+# NSIDC-0803 Daily Sea Ice Concentration NetCDF Generator
 
-# NSIDC 0803
-
-This repository enables users to generate daily NetCDF files from AMSR2 binary sea ice concentration data for the NSIDC-0803 dataset.
-
+This repository enables users to generate daily NetCDF files from AMSR2 binary sea ice concentration data for the NSIDC-0803 dataset. The tool creates CF-compliant NetCDF files with proper metadata and coordinate reference system information using pyproj for authoritative CRS definitions.
 
 ## Level of Support
 
@@ -16,14 +14,15 @@ This repository enables users to generate daily NetCDF files from AMSR2 binary s
 See the [LICENSE](LICENSE) for details on permissions and warranties. Please contact
 nsidc@nsidc.org for more information.
 
-
 ## Requirements
 
-* Python
-* conda
+* Python 3.8+
+* conda or mamba
+* ncgen (from NetCDF tools)
+* pyproj
+* netCDF4
 
 All Python dependencies are managed via the included `environment.yml` file.
-
 
 ## Installation
 
@@ -39,42 +38,145 @@ conda activate nsidc0803
 
 The main script processes binary AMSR2 files and generates CF-compliant NetCDF files with proper metadata following the approved NSIDC-0803 specification.
 
-```bash
-# Process single date (both hemispheres)
-python nsidc0803_generator.py \
-  -b /path/to/binary/files \
-  -o /path/to/output \
-  -t nsidc0803_template.cdl \
-  -s 20250104
-```
-NOTE: this will be improved to use click
+### Basic Usage
 
+```bash
+# Process yesterday's data with all defaults
+python nsidc0803_generator.py
+
+# Process specific date
+python nsidc0803_generator.py -s 2024-01-05
+
+# Process date range
+python nsidc0803_generator.py -s 2024-01-05 -e 2024-01-10
+
+# Process only northern hemisphere
+python nsidc0803_generator.py -s 2024-01-05 -h north
 ```
-- `-b, --binary-dir`: Directory containing binary input files (required)
-- `-o, --output-dir`: Directory for NetCDF output files (required)  
-- `-t, --template`: CDL template file (required)
-- `-s, --start-date`: Start date YYYYMMDD (required)
-- `-e, --end-date`: End date YYYYMMDD (optional, defaults to start-date)
+
+### Command Line Options
+
+- `-b, --binary-dir`: Directory containing binary input files (default: `/disks/sidads_staging/DATASETS/nsidc0740_AS2_nrt_nasateam_seaice_v1/`)
+- `-o, --output-dir`: Directory for NetCDF output files (default: `/share/apps/nsidc0803/`)
+- `-t, --template`: CDL template file (default: `nsidc0803_template.cdl`)
+- `-s, --start-date`: Start date YYYY-MM-DD or YYYYMMDD (default: yesterday)
+- `-e, --end-date`: End date YYYY-MM-DD or YYYYMMDD (default: same as start-date)
 - `-h, --hemisphere`: north/south/both (default: both)
 - `-v, --verbose`: Verbose output
+
+### Date Format Support
+
+The tool accepts dates in two formats:
+- Preferred: `YYYY-MM-DD` (e.g., `2024-01-05`)
+- Legacy: `YYYYMMDD` (e.g., `20240105`)
+
+### Examples
+
+```bash
+# Process yesterday's data (simplest usage)
+python nsidc0803_generator.py
+
+# Process specific date with dashes
+python nsidc0803_generator.py -s 2024-01-05
+
+# Process date range, northern hemisphere only
+python nsidc0803_generator.py -s 2024-01-05 -e 2024-01-10 -h north
+
+# Custom directories and template
+python nsidc0803_generator.py \
+  -b /custom/binary/path \
+  -o /custom/output/path \
+  -t custom_template.cdl \
+  -s 2024-01-05
+
+# Verbose output for debugging
+python nsidc0803_generator.py -s 2024-01-05 -v
 ```
 
-**Input files expected:**
+## File Structure
+
+### Input Files Expected
 - `nt_YYYYMMDD_as2_nrt_n.bin` (Northern Hemisphere)
 - `nt_YYYYMMDD_as2_nrt_s.bin` (Southern Hemisphere)
 
-**Output files generated:**
+### Output Files Generated
 - `NSIDC0803_SIC_N25km_YYYYMMDD_v2.0.nc` (Northern Hemisphere)
 - `NSIDC0803_SIC_S25km_YYYYMMDD_v2.0.nc` (Southern Hemisphere)
 
-Files are organized in date-based subdirectories: `YYYY.MM.DD/`
+### Output Directory Structure
+Files are organized in date-based subdirectories:
+```
+output_dir/
+├── 2024.01.05/
+│   ├── NSIDC0803_SIC_N25km_20240105_v2.0.nc
+│   └── NSIDC0803_SIC_S25km_20240105_v2.0.nc
+├── 2024.01.06/
+│   ├── NSIDC0803_SIC_N25km_20240106_v2.0.nc
+│   └── NSIDC0803_SIC_S25km_20240106_v2.0.nc
+└── ...
+```
+
+## Features
+
+- **Modular Design**: Separated utility functions for maintainability
+- **CF-Compliant**: Follows CF conventions for metadata and coordinate systems
+- **Authoritative CRS**: Uses pyproj for coordinate reference system definitions (EPSG:3411/3412)
+- **Flexible Input**: Accepts multiple date formats and date ranges
+- **Smart Defaults**: Processes yesterday's data by default
+- **Error Handling**: Comprehensive error reporting and validation
+- **Pole Hole Filling**: Automatically fills the polar observation gap for northern hemisphere data
+
+## Configuration
+
+Default paths are defined in `utils.py` and can be modified:
+
+```python
+INPUT_DIR = "/disks/sidads_staging/DATASETS/nsidc0740_AS2_nrt_nasateam_seaice_v1/"
+OUTPUT_DIR = "/share/apps/nsidc0803/"
+```
+
+## Development
+
+The codebase is organized into:
+
+- `nsidc0803_generator.py`: Main CLI interface and orchestration
+- `utils.py`: Core utility functions for file processing
+- `nsidc0803_template.cdl`: NetCDF template with metadata
+- `.gitignore`: Excludes data files and temporary artifacts
 
 ## Troubleshooting
 
-{troubleshooting}
+### Common Issues
 
+**Missing binary files:**
+```
+No binary file found: 2024-01-05 north
+```
+- Check that binary files exist in the specified directory
+- Verify file naming convention: `nt_YYYYMMDD_as2_nrt_[n|s].bin`
+
+**ncgen errors:**
+```
+ncgen failed: syntax error
+```
+- Ensure `ncgen` is installed and available in PATH
+- Check CDL template syntax
+
+**Permission errors:**
+- Ensure write permissions to output directory
+- Output directories are created automatically
+
+**Import errors:**
+- Verify conda environment is activated
+- Check that all dependencies are installed: `conda env update -f environment.yml`
+
+### Verbose Mode
+
+Use `-v` flag for detailed processing information:
+```bash
+python nsidc0803_generator.py -s 2024-01-05 -v
+```
 
 ## Credit
 
-This content was developed by the National Snow and Ice Data Center with funding from
-multiple sources.
+This content was developed by the National Snow and Ice Data Center with funding from multiple sources.
