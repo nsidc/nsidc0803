@@ -70,7 +70,7 @@ variables:
     :creator_name = "NASA National Snow and Ice Data Center Distributed Active Archive Center" ;
     :contributor_name = "Stewart J.S., Meier W.N., Wilcox, H., Scott D.J., Marowitz, R., Calme, J." ;
     :contributor_role = "scientific_programmer, project_scientist, software_developer, project_lead, software_developer, data_manager" ;
-    :citation = "Stewart, J.S., Meier, W.N., Wilcox, H., Scott, D.J. & Marowitz, R. (2025). AMSR2 Daily Polar Gridded Sea Ice Concentrations. (NSIDC-0803, Version 2). [Data Set]. Boulder, Colorado USA. National Snow and Ice Data Center. https://doi.org/10.5067/W13AO54SS7CW." ;
+    :citation = "Stewart, J.S., Meier, W.N., Marowitz, R., Scott, D.J. & Wilcox, H. (2025). AMSR2 Daily Polar Gridded Sea Ice Concentrations. (NSIDC-0803, Version 2). [Data Set]. Boulder, Colorado USA. National Snow and Ice Data Center. https://doi.org/10.5067/W13AO54SS7CW." ;
     :id = "10.5067/W13AO54SS7CW" ;
     :metadata_link = "https://doi.org/10.5067/W13AO54SS7CW" ;
     :product_version = "v2.0" ;
@@ -89,7 +89,7 @@ variables:
     :time_coverage_resolution = "P1D" ;
     :time_coverage_start = "$time_coverage_start" ;
     :time_coverage_end = "$time_coverage_end" ;
-    :time_coverage_duration = "P01T00:00.00" ;
+    :time_coverage_duration = "P1D" ;
     :date_created = "$date_created" ;
     :date_modified = "$date_modified" ;
 }
