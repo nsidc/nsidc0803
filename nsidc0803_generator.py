@@ -142,20 +142,23 @@ class NetCDFGenerator:
     "-t",
     required=True,
     type=click.Path(exists=True),
+    default="nsidc0803_template.cdl",
     help="CDL template file",
 )
 @click.option(
     "--start-date",
     "-s",
     required=True,
-    type=click.DateTime(formats=["%Y%m%d"]),
-    help="Start date (YYYYMMDD)",
+    type=click.DateTime(formats=["%Y-%m-%d", "%Y%m%d"]),
+    default=(dt.datetime.now() - dt.timedelta(days=1)).strftime("%Y-%m-%d"),
+    help="Start date (YYYY-MM-DD or YYYYMMDD), defaults to yesterday",
 )
 @click.option(
     "--end-date",
     "-e",
-    type=click.DateTime(formats=["%Y%m%d"]),
-    help="End date (YYYYMMDD), defaults to start-date",
+    type=click.DateTime(formats=["%Y-%m-%d", "%Y%m%d"]),
+    default=(dt.datetime.now() - dt.timedelta(days=1)).strftime("%Y-%m-%d"),
+    help="End date (YYYY-MM-DD or YYYYMMDD), defaults to yesterday",
 )
 @click.option(
     "--hemisphere",
