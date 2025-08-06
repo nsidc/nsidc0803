@@ -12,7 +12,8 @@ import numpy as np
 import pyproj
 from netCDF4 import Dataset, date2num
 
-INPUT_DIR = "/disks/sidads_staging/DATASETS/nsidc0740_AS2_nrt_nasateam_seaice_v1/"
+# INPUT_DIR = "/disks/sidads_staging/DATASETS/nsidc0740_AS2_nrt_nasateam_seaice_v1/"
+INPUT_DIR = "/share/apps/nsidc0803/"
 OUTPUT_DIR = "/disks/sidads_staging/DATASETS/nsidc0803_daily_a2_seaice_conc/"
 
 
