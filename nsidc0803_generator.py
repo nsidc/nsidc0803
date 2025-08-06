@@ -12,6 +12,7 @@ from string import Template
 
 import click
 import numpy as np
+import pyproj
 import yaml
 from netCDF4 import Dataset, date2num
 
@@ -24,58 +25,46 @@ def load_config(config_file):
 
 def get_grid_params():
     """Return grid parameters for both hemispheres"""
+    north_crs = pyproj.CRS("EPSG:3411")
+    south_crs = pyproj.CRS("EPSG:3412")
+
+    north_cf = north_crs.to_cf()
+    south_cf = south_crs.to_cf()
+
+    north_cf.update(
+        {
+            "long_name": "NSIDC Sea Ice Polar Stereographic North",
+            "GeoTransform": "-3850000 25000 0 5850000 0 -25000",
+        }
+    )
+
+    south_cf.update(
+        {
+            "long_name": "NSIDC Sea Ice Polar Stereographic South",
+            "GeoTransform": "-3950000 25000 0 4350000 0 -25000",
+        }
+    )
+
     return {
         "north": {
             "xdim": 304,
             "ydim": 448,
-            "crs_long_name": "NSIDC Sea Ice Polar Stereographic North",
-            "straight_vertical_longitude_from_pole": -45.0,
-            "longitude_of_projection_origin": -45.0,
-            "latitude_of_projection_origin": 90.0,
-            "latitude_of_standard_parallel": 70.0,
-            "GeoTransform": "-3850000 25000 0 5850000 0 -25000 ",
+            "crs_attrs": north_cf,
             "geospatial_bounds_crs": "EPSG:3411",
             "geospatial_bounds": "POLYGON ((-3850000 5850000, 3750000 5850000,"
             "3750000 -5350000, -3850000 -5350000, -3850000 5850000))",
             "geospatial_lat_min": 30.980564,
             "geospatial_lat_max": 90.0,
-            "crs_wkt": 'PROJCS["NSIDC Sea Ice Polar Stereographic North",'
-            'GEOGCS["Hughes 1980",DATUM["Hughes_1980",'
-            'SPHEROID["Hughes 1980",6378273,298.279411123064,'
-            'AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG",'
-            '"1359"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG",'
-            '"8901"]],UNIT["degree",0.0174532925199433,'
-            'AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG",'
-            '"10345"]],PROJECTION["Polar_Stereographic"],'
-            'PARAMETER["latitude_of_origin",70],'
-            'PARAMETER["central_meridian",-45],'
-            'PARAMETER["false_easting",0],'
-            'PARAMETER["false_northing",0],UNIT["metre",1,'
-            'AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","3411"]]',
         },
         "south": {
             "xdim": 316,
             "ydim": 332,
-            "crs_long_name": "NSIDC Sea Ice Polar Stereographic South",
-            "straight_vertical_longitude_from_pole": 0.0,
-            "longitude_of_projection_origin": 0.0,
-            "latitude_of_projection_origin": -90.0,
-            "latitude_of_standard_parallel": -70.0,
-            "GeoTransform": "-3950000 25000 0 4350000 0 -25000 ",
+            "crs_attrs": south_cf,
             "geospatial_bounds_crs": "EPSG:3412",
             "geospatial_bounds": "POLYGON ((-3950000 4350000, 3950000 4350000,"
             "3950000 -3950000, -3950000 -3950000, -3950000 4350000))",
             "geospatial_lat_min": -90.0,
             "geospatial_lat_max": -39.23089,
-            "crs_wkt": """PROJCS["NSIDC Sea Ice Polar Stereographic South",
-            GEOGCS["Hughes 1980",DATUM["Hughes_1980",SPHEROID["Hughes 1980",
-            6378273,298.279411123064,AUTHORITY["EPSG","7058"]],AUTHORITY["EPSG",
-            "1359"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],
-            UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG",
-            "10345"]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",
-            -70],PARAMETER["central_meridian",0],PARAMETER["false_easting",0],
-            PARAMETER["false_northing",0],UNIT["metre",1,
-            AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","3412"]]""",
         },
     }
 
@@ -117,15 +106,6 @@ def create_cdl(template_file, output_path, date, hemisphere):
     substitutions = {
         "xdim": params["xdim"],
         "ydim": params["ydim"],
-        "crs_long_name": params["crs_long_name"],
-        # "longitude_of_origin": params["longitude_of_origin"],
-        "longitude_of_projection_origin": params["longitude_of_projection_origin"],
-        "straight_vertical_longitude_from_pole": params[
-            "longitude_of_projection_origin"
-        ],
-        "latitude_of_projection_origin": params["latitude_of_projection_origin"],
-        "latitude_of_standard_parallel": params["latitude_of_standard_parallel"],
-        "GeoTransform": params["GeoTransform"],
         "geospatial_bounds_crs": params["geospatial_bounds_crs"],
         "geospatial_bounds": params["geospatial_bounds"],
         "geospatial_lat_min": params["geospatial_lat_min"],
@@ -173,6 +153,7 @@ def add_nc_coordinate_values(nc_path, date, hemisphere):
     """Add coordinate values to NetCDF file"""
     grid_params = get_grid_params()
     params = grid_params[hemisphere]
+    crs_attrs = params["crs_attrs"]
 
     with Dataset(nc_path, "a") as ds:
         # Set time coordinate
@@ -182,7 +163,7 @@ def add_nc_coordinate_values(nc_path, date, hemisphere):
 
         # Set x coordinates (25km resolution)
         xdim = params["xdim"]
-        geotransform = params["GeoTransform"].split()
+        geotransform = crs_attrs["GeoTransform"].split()
         x_origin = float(geotransform[0])
         x_pixel_size = float(geotransform[1])
 
@@ -239,8 +220,11 @@ def encode_binary_to_nc(nc_path, binary_path, hemisphere):
     with Dataset(nc_path, "a") as ds:
         icecon = ds.variables["ICECON"]
         icecon[0, :, :] = scaled_data[:, :]
+        crs_var = ds.variables["crs"]
+        crs_attrs = params["crs_attrs"]
 
-        ds.variables["crs"].setncattr("crs_wkt", params["crs_wkt"])
+        for attr_name, attr_value in crs_attrs.items():
+            crs_var.setncattr(attr_name, attr_value)
 
 
 class NetCDFGenerator:
