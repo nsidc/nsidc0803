@@ -2,7 +2,7 @@
   <img alt="NSIDC logo" src="https://nsidc.org/themes/custom/nsidc/logo.svg" width="150" />
 </p>
 
-# NSIDC-0803 Daily Sea Ice Concentration NetCDF Generator
+# NSIDC-0803 D
 
 This repository enables users to generate daily NetCDF files from AMSR2 binary sea ice concentration data for the NSIDC-0803 dataset. The tool creates CF-compliant NetCDF files with proper metadata and coordinate reference system information using pyproj for authoritative CRS definitions.
 
@@ -18,9 +18,6 @@ nsidc@nsidc.org for more information.
 
 * Python 3.8+
 * conda or mamba
-* ncgen (from NetCDF tools)
-* pyproj
-* netCDF4
 
 All Python dependencies are managed via the included `environment.yml` file.
 
@@ -67,8 +64,8 @@ python nsidc0803_generator.py -s 2024-01-05 -h north
 ### Date Format Support
 
 The tool accepts dates in two formats:
-- Preferred: `YYYY-MM-DD` (e.g., `2024-01-05`)
-- Legacy: `YYYYMMDD` (e.g., `20240105`)
+- `YYYY-MM-DD` (e.g., `2024-01-05`)
+- `YYYYMMDD` (e.g., `20240105`)
 
 ### Examples
 
@@ -77,7 +74,7 @@ The tool accepts dates in two formats:
 python nsidc0803_generator.py
 
 # Process specific date with dashes
-python nsidc0803_generator.py -s 2024-01-05
+python nsidc0803_generator.py -s 2024-01-05 -e 2024-01-05
 
 # Process date range, northern hemisphere only
 python nsidc0803_generator.py -s 2024-01-05 -e 2024-01-10 -h north
@@ -90,7 +87,7 @@ python nsidc0803_generator.py \
   -s 2024-01-05
 
 # Verbose output for debugging
-python nsidc0803_generator.py -s 2024-01-05 -v
+python nsidc0803_generator.py -v
 ```
 
 ## File Structure
@@ -116,16 +113,6 @@ output_dir/
 └── ...
 ```
 
-## Features
-
-- **Modular Design**: Separated utility functions for maintainability
-- **CF-Compliant**: Follows CF conventions for metadata and coordinate systems
-- **Authoritative CRS**: Uses pyproj for coordinate reference system definitions (EPSG:3411/3412)
-- **Flexible Input**: Accepts multiple date formats and date ranges
-- **Smart Defaults**: Processes yesterday's data by default
-- **Error Handling**: Comprehensive error reporting and validation
-- **Pole Hole Filling**: Automatically fills the polar observation gap for northern hemisphere data
-
 ## Configuration
 
 Default paths are defined in `utils.py` and can be modified:
@@ -142,7 +129,6 @@ The codebase is organized into:
 - `nsidc0803_generator.py`: Main CLI interface and orchestration
 - `utils.py`: Core utility functions for file processing
 - `nsidc0803_template.cdl`: NetCDF template with metadata
-- `.gitignore`: Excludes data files and temporary artifacts
 
 ## Troubleshooting
 
@@ -162,10 +148,6 @@ ncgen failed: syntax error
 - Ensure `ncgen` is installed and available in PATH
 - Check CDL template syntax
 
-**Permission errors:**
-- Ensure write permissions to output directory
-- Output directories are created automatically
-
 **Import errors:**
 - Verify conda environment is activated
 - Check that all dependencies are installed: `conda env update -f environment.yml`
@@ -174,7 +156,7 @@ ncgen failed: syntax error
 
 Use `-v` flag for detailed processing information:
 ```bash
-python nsidc0803_generator.py -s 2024-01-05 -v
+python nsidc0803_generator.py -v
 ```
 
 ## Credit
