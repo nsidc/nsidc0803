@@ -29,6 +29,9 @@ def get_grid_params():
         {
             "long_name": "NSIDC Sea Ice Polar Stereographic North",
             "GeoTransform": "-3850000 25000 0 5850000 0 -25000",
+            "latitude_of_projection_origin": 90.0,
+            "longitude_of_projection_origin": -45.0,
+            "latitude_of_standard_parallel": north_cf.pop("standard_parallel"),
         }
     )
 
@@ -36,6 +39,9 @@ def get_grid_params():
         {
             "long_name": "NSIDC Sea Ice Polar Stereographic South",
             "GeoTransform": "-3950000 25000 0 4350000 0 -25000",
+            "latitude_of_projection_origin": -90.0,
+            "longitude_of_projection_origin": 0.0,
+            "latitude_of_standard_parallel": south_cf.pop("standard_parallel"),
         }
     )
 
