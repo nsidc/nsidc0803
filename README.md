@@ -57,7 +57,7 @@ python nsidc0803_generator.py -s 2024-01-05 -h north
 - `-o, --output-dir`: Directory for NetCDF output files (default: `/share/apps/nsidc0803/`)
 - `-t, --template`: CDL template file (default: `nsidc0803_template.cdl`)
 - `-s, --start-date`: Start date YYYY-MM-DD or YYYYMMDD (default: yesterday)
-- `-e, --end-date`: End date YYYY-MM-DD or YYYYMMDD (default: same as start-date)
+- `-e, --end-date`: End date YYYY-MM-DD or YYYYMMDD (default: yesterday)
 - `-h, --hemisphere`: north/south/both (default: both)
 - `-v, --verbose`: Verbose output
 
