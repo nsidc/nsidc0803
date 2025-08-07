@@ -87,7 +87,7 @@ def get_output_filename(output_dir, date, hemisphere):
     date_dir = Path(output_dir) / date.strftime("%Y.%m.%d")
     date_dir.mkdir(parents=True, exist_ok=True)
 
-    filename = f"NSIDC0803_0083_SEAICE_AMSR2_{hem_code}_{ymd}_v2.0.nc"
+    filename = f"NSIDC-0803_0083_SEAICE_AMSR2_{hem_code}_{ymd}_v2.0.nc"
     return date_dir / filename
 
 
