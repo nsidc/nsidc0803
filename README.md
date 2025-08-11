@@ -23,13 +23,7 @@ All Python dependencies are managed via the included `environment.yml` file.
 
 ## Installation
 
-```bash
-# Create conda environment
-conda env create -f environment.yml
-
-# Activate environment
-conda activate nsidc0803
-```
+There is a conda environment that is built automatically on the spinup of the virutal machine ![nsidc0803-vm](https://github.com/nsidc/nsidc0803-vm) so no manual installation needed.
 
 ## Usage
 
@@ -42,7 +36,7 @@ The main script processes binary AMSR2 files and generates CF-compliant NetCDF f
 python nsidc0803_generator.py
 
 # Process specific date
-python nsidc0803_generator.py -s 2024-01-05
+python nsidc0803_generator.py -s 2024-01-05 -e 2024-01-05
 
 # Process date range
 python nsidc0803_generator.py -s 2024-01-05 -e 2024-01-10
@@ -97,19 +91,19 @@ python nsidc0803_generator.py -v
 - `nt_YYYYMMDD_as2_nrt_s.bin` (Southern Hemisphere)
 
 ### Output Files Generated
-- `NSIDC0803_SIC_N25km_YYYYMMDD_v2.0.nc` (Northern Hemisphere)
-- `NSIDC0803_SIC_S25km_YYYYMMDD_v2.0.nc` (Southern Hemisphere)
+- `NSIDC-0803_SEAICE_AMSR2_N_YYYYMMDD_v2.0.nc` (Northern Hemisphere)
+- `NSIDC-0803_SEAICE_AMSR2_S_YYYYMMDD_v2.0.nc` (Southern Hemisphere)
 
 ### Output Directory Structure
 Files are organized in date-based subdirectories:
 ```
 output_dir/
 ├── 2024.01.05/
-│   ├── NSIDC0803_SIC_N25km_20240105_v2.0.nc
-│   └── NSIDC0803_SIC_S25km_20240105_v2.0.nc
+│   ├── NSIDC-0803_SEAICE_AMSR2_N_20240105_v2.0.nc
+│   └── NSIDC-0803_SEAICE_AMSR2_S_20240105_v2.0.nc
 ├── 2024.01.06/
-│   ├── NSIDC0803_SIC_N25km_20240106_v2.0.nc
-│   └── NSIDC0803_SIC_S25km_20240106_v2.0.nc
+│   ├── NSIDC-0803_SEAICE_AMSR2_N_20240106_v2.0.nc
+│   └── NSIDC-0803_SEAICE_AMSR2_S_20240106_v2.0.nc
 └── ...
 ```
 
